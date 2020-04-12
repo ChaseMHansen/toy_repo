@@ -109,7 +109,8 @@ class ECA(object):
                     intList.append(2)
                     ruleRemaining += -3**(self.numNeighborhoods-i-1)*2
                     continue
-                if ruleRemaining/3**(self.numNeighborhoods-i-1)>=1 and ruleRemaining/3**(self.numNeighborhoods-i-1)<2:
+                if ruleRemaining/3**(self.numNeighborhoods-i-1)>=1 and 
+                    ruleRemaining/3**(self.numNeighborhoods-i-1)<2:
                     intList.append(1)
                     ruleRemaining += -3**(self.numNeighborhoods-i-1)*1
                     continue
@@ -121,8 +122,9 @@ class ECA(object):
 
     def generate_lookup_table(self):
         '''
-        Take the rule number and the number of states to make a mapping from a string in base 2 or base 3
-        into a propagator that takes the system to the next timestep.
+        Take the rule number and the number of states to make a mapping from a
+        string in base 2 or base 3 into a propagator that takes
+        the system to the next timestep.
         '''
         Digits=self.change_base()
         neighborhoods=self.create_Neighborhoods()
@@ -131,7 +133,8 @@ class ECA(object):
         mapping=dict()
 
         for i in range(len(Digits)):
-            #Here I want to flip the binary or ternary string string, such that the 0,0,0 or 0,0 neighborhood lines up with the final digit.
+            #Here I want to flip the binary or ternary string string, such that 
+            #the 0,0,0 or 0,0 neighborhood lines up with the final digit.
             mapping.update({neighborhoods[i] : Digits[len(Digits)-i-1]})
         return mapping
     def create_Neighborhoods(self):
@@ -139,15 +142,18 @@ class ECA(object):
         Create the allowed neighborhoods for either 2 or 3 states.
         '''
         if self.numStates==2:
-            nbhds=[(0,0,0), (0,0,1), (0,1,0), (0,1,1), (1,0,0), (1,0,1), (1,1,0), (1,1,1)]
+            nbhds=[(0,0,0), (0,0,1), (0,1,0), (0,1,1), (1,0,0), (1,0,1), 
+                    (1,1,0), (1,1,1)]
         if self.numStates==3:
-            nbhds=[(0,0), (0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1), (2,2)]
+            nbhds=[(0,0), (0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1),
+                    (2,2)]
         return nbhds
 
 
     def evolve_CA(self, numSteps):
         '''
-        Take the initial condition and evolve it numSteps timesteps using the propagator defined by the
+        Take the initial condition and evolve it numSteps timesteps using
+        the propagator defined by the
         rule number.
         '''
         initial_condition = self.initial
@@ -160,7 +166,9 @@ class ECA(object):
         if self.numStates==2:
             for i in range(numSteps):
                 for x in range(len(current_Configuration)):
-                    xnbhd=(int(current_Configuration[x-1]),int(current_Configuration[x]),int(current_Configuration[(x+1)%length]))
+                    xnbhd=(int(current_Configuration[x-1]),
+                            int(current_Configuration[x]),
+                            int(current_Configuration[(x+1)%length]))
 
                     Config_Placeholder[x]=int(propagator[xnbhd])
                 current_Configuration=Config_Placeholder.copy()
@@ -168,7 +176,8 @@ class ECA(object):
         if self.numStates == 3:
             for i in range(numSteps):
                 for x in range(len(current_Configuration)):
-                    xnbhd=(int(current_Configuration[x-1]),int(current_Configuration[x]))
+                    xnbhd=(int(current_Configuration[x-1]),
+                            int(current_Configuration[x]))
 
                     Config_Placeholder[x]=int(propagator[xnbhd])
                 current_Configuration=Config_Placeholder.copy()
