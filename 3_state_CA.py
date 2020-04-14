@@ -38,7 +38,7 @@ class ECA(object):
     '''
     Elementary cellular automata simulator.
     '''
-    def __init__(self, rule_number, initial_condition, numNeighborhoods, numStates):
+    def __init__(self, rule_number, initial_condition, num_neighborhoods, num_states):
         '''
         Initializes the simulator for the given rule number and initial condition.
 
@@ -52,7 +52,7 @@ class ECA(object):
             should be ints.
         num_Neighborhoods: int
             The number of possible neighborhoods, for binary, we had 8, for ternary, 9.
-        numStates: int
+        num_states: int
             The number of states for each cell in our CA, 2 or 3.
 
         Attributes
@@ -72,9 +72,9 @@ class ECA(object):
                 raise ValueError("initial condition must be a list of 0s and 1s")
 
 
-        self.numStates = numStates
+        self.num_states = num_states
         self.ruleNumber=rule_number
-        self.numNeighborhoods = numNeighborhoods
+        self.num_neighborhoods = num_neighborhoods
         self.lookup_table = self.generate_lookup_table()
         self.initial = initial_condition
         self.spacetime = [initial_condition]
@@ -87,34 +87,34 @@ class ECA(object):
         '''
         Change a number into base 2 or base 3, with 8 or 9 digits respectively.
         '''
-        if self.numStates==2:
-            ruleRemaining=self.ruleNumber
+        if self.num_states==2:
+            rule_remaining=self.ruleNumber
             intList=[]
-            for i in range(self.numNeighborhoods):
-                if ruleRemaining/2**(self.numNeighborhoods-i-1)>=1:
+            for i in range(self.num_neighborhoods):
+                if rule_remaining/2**(self.num_neighborhoods-i-1)>=1:
                     intList.append(1)
-                    ruleRemaining += -2**(self.numNeighborhoods-i-1)
+                    rule_remaining += -2**(self.num_neighborhoods-i-1)
                     continue
-                if ruleRemaining/2**(self.numNeighborhoods-i-1)<1:
+                if rule_remaining/2**(self.num_neighborhoods-i-1)<1:
                     intList.append(0)
                     continue
             return intList
 
-        if self.numStates==3:
+        if self.num_states==3:
             #We have 9 neighborhoods, so we need 9 digits of ternary.
-            ruleRemaining=self.ruleNumber
+            rule_remaining=self.ruleNumber
             intList=[]
-            for i in range(self.numNeighborhoods):
-                if ruleRemaining/3**(self.numNeighborhoods-i-1)>=2:
+            for i in range(self.num_neighborhoods):
+                if rule_remaining/3**(self.num_neighborhoods-i-1)>=2:
                     intList.append(2)
-                    ruleRemaining += -3**(self.numNeighborhoods-i-1)*2
+                    rule_remaining += -3**(self.num_neighborhoods-i-1)*2
                     continue
-                if ruleRemaining/3**(self.numNeighborhoods-i-1)>=1 and 
-                    ruleRemaining/3**(self.numNeighborhoods-i-1)<2:
+                if rule_remaining/3**(self.num_neighborhoods-i-1)>=1 and 
+                    rule_remaining/3**(self.num_neighborhoods-i-1)<2:
                     intList.append(1)
-                    ruleRemaining += -3**(self.numNeighborhoods-i-1)*1
+                    rule_remaining += -3**(self.num_neighborhoods-i-1)*1
                     continue
-                if ruleRemaining/3**(self.numNeighborhoods-i-1)<1:
+                if rule_remaining/3**(self.num_neighborhoods-i-1)<1:
                     intList.append(0)
                     continue
 
@@ -141,57 +141,57 @@ class ECA(object):
         '''
         Create the allowed neighborhoods for either 2 or 3 states.
         '''
-        if self.numStates==2:
+        if self.num_states==2:
             nbhds=[(0,0,0), (0,0,1), (0,1,0), (0,1,1), (1,0,0), (1,0,1), 
                     (1,1,0), (1,1,1)]
-        if self.numStates==3:
+        if self.num_states==3:
             nbhds=[(0,0), (0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1),
                     (2,2)]
         return nbhds
 
 
-    def evolve_CA(self, numSteps):
+    def evolve_CA(self, num_steps):
         '''
-        Take the initial condition and evolve it numSteps timesteps using
+        Take the initial condition and evolve it num_steps timesteps using
         the propagator defined by the
         rule number.
         '''
         initial_condition = self.initial
-        current_Configuration = initial_condition.copy()
+        current_configuration = initial_condition.copy()
         propagator=self.generate_lookup_table()
 
         Config_Placeholder=initial_condition.copy()
-        timeSeries=[]
-        timeSeries.append(current_Configuration)
-        if self.numStates==2:
-            for i in range(numSteps):
-                for x in range(len(current_Configuration)):
-                    xnbhd=(int(current_Configuration[x-1]),
-                            int(current_Configuration[x]),
-                            int(current_Configuration[(x+1)%length]))
+        time_series=[]
+        time_series.append(current_configuration)
+        if self.num_states==2:
+            for i in range(num_steps):
+                for x in range(len(current_configuration)):
+                    xnbhd=(int(current_configuration[x-1]),
+                            int(current_configuration[x]),
+                            int(current_configuration[(x+1)%length]))
 
                     Config_Placeholder[x]=int(propagator[xnbhd])
-                current_Configuration=Config_Placeholder.copy()
-                timeSeries.append(current_Configuration)
-        if self.numStates == 3:
-            for i in range(numSteps):
-                for x in range(len(current_Configuration)):
-                    xnbhd=(int(current_Configuration[x-1]),
-                            int(current_Configuration[x]))
+                current_configuration=Config_Placeholder.copy()
+                time_series.append(current_configuration)
+        if self.num_states == 3:
+            for i in range(num_steps):
+                for x in range(len(current_configuration)):
+                    xnbhd=(int(current_configuration[x-1]),
+                            int(current_configuration[x]))
 
                     Config_Placeholder[x]=int(propagator[xnbhd])
-                current_Configuration=Config_Placeholder.copy()
-                timeSeries.append(current_Configuration)
-        return timeSeries
+                current_configuration=Config_Placeholder.copy()
+                time_series.append(current_configuration)
+        return time_series
 
-    def plot_CA(self,numSteps):
+    def plot_CA(self,num_steps):
         '''
         Plot the result of a CA calculation.
         '''
-        timeSeries=self.evolve_CA(numSteps)
+        time_series=self.evolve_CA(num_steps)
         plt.figure(figsize=(12,12))
         #My girlfriend wanted pink, so the colormap has pink.
-        plt.imshow(timeSeries, cmap=plt.cm.spring, interpolation='nearest')
+        plt.imshow(time_series, cmap=plt.cm.spring, interpolation='nearest')
         plt.show()
 
 
