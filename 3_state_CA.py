@@ -1,3 +1,8 @@
+import random
+import numpy as np
+import matplotlib.pyplot as plt
+
+
 def random_string(length):
     '''
     Returns a random bit string of the given length. 
@@ -109,8 +114,7 @@ class ECA(object):
                     intList.append(2)
                     rule_remaining += -3**(self.num_neighborhoods-i-1)*2
                     continue
-                if rule_remaining/3**(self.num_neighborhoods-i-1)>=1 and 
-                    rule_remaining/3**(self.num_neighborhoods-i-1)<2:
+                if rule_remaining/3**(self.num_neighborhoods-i-1)>=1 and rule_remaining/3**(self.num_neighborhoods-i-1)<2:
                     intList.append(1)
                     rule_remaining += -3**(self.num_neighborhoods-i-1)*1
                     continue
@@ -168,7 +172,7 @@ class ECA(object):
                 for x in range(len(current_configuration)):
                     xnbhd=(int(current_configuration[x-1]),
                             int(current_configuration[x]),
-                            int(current_configuration[(x+1)%length]))
+                            int(current_configuration[(x+1)%self._length]))
 
                     Config_Placeholder[x]=int(propagator[xnbhd])
                 current_configuration=Config_Placeholder.copy()
