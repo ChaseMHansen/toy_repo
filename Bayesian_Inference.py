@@ -17,7 +17,6 @@ def generate_dataset(num_samples):
 
 
 def p_x_given_a(x, a):
-    # N_a = 1 / np.sqrt(2 * np.pi / np.log(a))
     N_a = np.sqrt(np.log(a) / (2 * np.pi))
     return N_a * a ** (-(x ** 2) / 2)
 
@@ -35,7 +34,10 @@ def pxa_many_x(x_list, a):
 
 
 def metropolis(current_state, posterior, a_list=np.linspace(1.1, 5, 1000)):
-    # Perform one step of the metropolis algorithm, does not move time forward.
+    """
+    Perform one step of the metropolis algorithm, does not move time forward.
+    The generating function is just a random a value from the list of possible a values.
+    """
     r = np.random.random()
     g = random.choice(range(len(a_list)))
     ratio = posterior[g] / posterior[current_state]
