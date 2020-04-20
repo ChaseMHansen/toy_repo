@@ -33,7 +33,7 @@ def pxa_many_x(x_list, a):
     return result
 
 
-def metropolis(current_state, posterior, a_list=np.linspace(1.1, 5, 1000)):
+def metropolis(current_state, posterior, a_list=np.linspace(1, 4, 1000)):
     """
     Perform one step of the metropolis algorithm, does not move time forward.
     The generating function is just a random a value from the list of possible a values.
@@ -49,7 +49,7 @@ def metropolis(current_state, posterior, a_list=np.linspace(1.1, 5, 1000)):
         return g
 
 
-def generate_posterior(num_samples, a_list=np.linspace(1.1, 5, 1000)):
+def generate_posterior(num_samples, a_list=np.linspace(1, 4, 1000)):
     """
     Generate a posterior distribution from a random sample.
     """
@@ -73,13 +73,13 @@ def MCMC(num_iter, pax, a_list=np.linspace(1, 4, 1000)):
         link = metropolis(current_state, posterior, a_list)
         chain.append(a_list[link])
         current_state = link
-
+    # Don't include the beginning of the chain to ensure a steady state.
     return chain[2000:]
 
 
-pax = generate_posterior(100)
+pax = generate_posterior(1000)
 chain = MCMC(5000, pax)
-a_list = np.linspace(1.1, 5, 1000)
+a_list = np.linspace(1, 4, 1000)
 plt.subplot(3, 1, 1)
 plt.plot(a_list, pax)
 plt.subplot(3, 1, 2)
