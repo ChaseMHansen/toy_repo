@@ -1,6 +1,6 @@
 # My Toy Git Repo
 
-Author: Chase Hansen
+Author: Chase Hansen or is it?
 
 This is a toy repository for learning about Git.
 
